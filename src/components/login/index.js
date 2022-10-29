@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate, useLocation, Navigate, } from "react-router-dom";
-import { fakeAuthProvider } from "./auth";
+import { AWSAuthProvider } from "./auth";
 
 
 const AuthContextType = {
@@ -21,21 +21,21 @@ export function AuthProvider({ children }) {
     }
 
     const oauth2signin = (callback) => {
-        if (!fakeAuthProvider.isAuthenticated) {
-            fakeAuthProvider.oauth2();
+        if (!AWSAuthProvider.isAuthenticated) {
+            AWSAuthProvider.oauth2();
         } 
         callback();
     }
 
     const signin = (newUser, callback) => {
-        return fakeAuthProvider.signin(() => {
+        return AWSAuthProvider.signin(() => {
             setUser(newUser);
             callback();
         });
     };
 
     const signout = (callback) => {
-        return fakeAuthProvider.signout(() => {
+        return AWSAuthProvider.signout(() => {
             setUser(null);
             callback();
         });
@@ -71,7 +71,6 @@ export function CallbackHandler({ children }) {
     const location = useLocation();
     const user = useAuth();
     const code = new URLSearchParams(location.search).get("code")
-    console.log(code);
     user.setOAuth2Code(code);
     return children;
 }
